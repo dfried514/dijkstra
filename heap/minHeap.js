@@ -26,16 +26,18 @@ MinHeap.prototype.parent = function(index) {
 }
 
 MinHeap.prototype.heapify = function(index) {
-  let leftIndex = this.left(index);
-  let rightIndex = this.right(index);
+  const leftIndex = this.left(index);
+  const rightIndex = this.right(index);
   let smallest;
 
-  if (this.compare(this._heap[leftIndex], this._heap[index]) < 0) {
+  if (this._heap[leftIndex]
+      && this.compare(this._heap[leftIndex], this._heap[index]) < 0) {
     smallest = leftIndex;
   } else {
     smallest = index;
   }
-  if (this.compare(this._heap[rightIndex], this._heap[smallest]) < 0) {
+  if (this._heap[rightIndex]
+      && this.compare(this._heap[rightIndex], this._heap[smallest]) < 0) {
     smallest = rightIndex;
   }
   if (smallest !== index) {

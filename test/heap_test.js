@@ -14,8 +14,8 @@ describe('defaultCompare', () => {
 });
 
 describe('heapify', () => {
-  let MinHeap = require('../heap/minHeap.js').MinHeap;
-  let heap = new MinHeap();
+  const MinHeap = require('../heap/minHeap.js').MinHeap;
+  const heap = new MinHeap();
 
   it('should correctly maintain heap structure of already formed heap', () => {
     heap._heap = [1, 2, 3, 4];
