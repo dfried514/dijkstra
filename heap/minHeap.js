@@ -1,3 +1,6 @@
+function defaultMaxValue() {
+  return Number.MAX_SAFE_INTEGER;
+}
 function defaultCompare(a, b) {
   if (a < b) {
     return -1;
@@ -7,8 +10,9 @@ function defaultCompare(a, b) {
   }
   return 0;
 }
-function MinHeap(compare = defaultCompare) {
+function MinHeap(compare = defaultCompare, maxValue = defaultMaxValue) {
   this.compare = compare;
+  this.maxValue = maxValue;
   this._heap = [];
 }
 MinHeap.prototype.left = function(index) {
@@ -56,23 +60,24 @@ MinHeap.prototype.decreaseKey = function(index, key) {
   if (index < 0 || index >= this._heap.length) {
     throw Error('Index is outside the bounds of the heap!');
   }
-  if (key > this._heap[index]) {
+  if (this.compare(key, this._heap[index]) > 0) {
     throw Error('Value is greater than key!');
   }
-  if (key === this._heap[index]) {
+  if (this.compare(key, this._heap[index]) === 0) {
     throw Error('Matching values!');
   }
   this._heap[index] = key;
 
-  while (index > 0 && this._heap[this.parent(index)] > this._heap[index]) {
-    let curParent = this.parent(index);
-    [this._heap[curParent], this._heap[index]]
-      = [this._heap[index], this._heap[curParent]];
-    index = curParent;
+  while (index > 0
+    && this.compare(this._heap[this.parent(index)], this._heap[index]) > 0) {
+      let curParent = this.parent(index);
+      [this._heap[curParent], this._heap[index]]
+        = [this._heap[index], this._heap[curParent]];
+      index = curParent;
   }
 }
 MinHeap.prototype.insert = function(key) {
-  this._heap.push(Number.MAX_SAFE_INTEGER);
+  this._heap.push(this.maxValue());
   this.decreaseKey(this._heap.length - 1, key);
 }
 module.exports = { defaultCompare, MinHeap };
