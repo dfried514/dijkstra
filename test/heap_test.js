@@ -85,12 +85,19 @@ describe('HEAP METHODS', () => {
       expect(heap._heap).to.deep.equal([10, 15, 30, 20]);
     });
   });
-  describe('heapInsert', () => {
+  describe('insert', () => {
+    beforeEach(() => {
+      heap._heap = [10, 20, 30, 40];
+    });
     it('should correctly insert a key into the heap and update the heap', () => {
+      heap.insert(15);
 
+      expect(heap._heap).to.deep.equal([10, 15, 30, 40, 20]);
     });
     it('should properly handle duplicate values within the heap', () => {
+      heap.insert(10);
 
+      expect(heap._heap).to.deep.equal([10, 10, 30, 40, 20]);
     });
   });
   after(() => {

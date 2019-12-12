@@ -18,7 +18,7 @@ MinHeap.prototype.right = function(index) {
   return 2 + (2 * index);
 }
 MinHeap.prototype.parent = function(index) {
-  return Math.floor(index / 2);
+  return Math.ceil(index / 2) - 1;
 }
 MinHeap.prototype.heapify = function(index) {
   const leftIndex = this.left(index);
@@ -70,5 +70,9 @@ MinHeap.prototype.decreaseKey = function(index, key) {
       = [this._heap[index], this._heap[curParent]];
     index = curParent;
   }
+}
+MinHeap.prototype.insert = function(key) {
+  this._heap.push(Number.MAX_SAFE_INTEGER);
+  this.decreaseKey(this._heap.length - 1, key);
 }
 module.exports = { defaultCompare, MinHeap };
