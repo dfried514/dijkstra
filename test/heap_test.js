@@ -77,9 +77,12 @@ describe('HEAP METHODS', () => {
       expect(handler).to.throw(Error);
       expect(handler).to.throw('Matching values!');
     });
-    it('should correctly decrease the key of a particular index and update the heap',
-      () => {
+    it('should decrease the key of a particular index and update the heap', () => {
+      heap._heap = [10, 20, 30, 40];
 
+      heap.decreaseKey(3, 15);
+
+      expect(heap._heap).to.deep.equal([10, 15, 30, 20]);
     });
   });
   describe('heapInsert', () => {

@@ -62,5 +62,13 @@ MinHeap.prototype.decreaseKey = function(index, key) {
   if (key === this._heap[index]) {
     throw Error('Matching values!');
   }
+  this._heap[index] = key;
+
+  while (index > 0 && this._heap[this.parent(index)] > this._heap[index]) {
+    let curParent = this.parent(index);
+    [this._heap[curParent], this._heap[index]]
+      = [this._heap[index], this._heap[curParent]];
+    index = curParent;
+  }
 }
 module.exports = { defaultCompare, MinHeap };
