@@ -18,7 +18,20 @@ function MinHeap(compare = defaultCompare, maxValue = defaultMaxValue,
     this.compare = compare;
     this.maxValue = maxValue;
     this.setValue = setValue;
+    this._heapHandlers = [];
     this._heap = [];
+}
+MinHeap.prototype.swap = function(a, b) {
+  [this._heap[a], this._heap[b]] = [this._heap[b], this._heap[a]];
+
+  if (this._heapHandlers.length === 0) {
+    return;
+  }
+  const vertexA = this._heap[a][0];
+  const vertexB = this._heap[b][0];
+
+  this._heapHandlers[vertexA] = a;
+  this._heapHandlers[vertexB] = b;
 }
 MinHeap.prototype.left = function(index) {
   return 1 + (2 * index);
@@ -45,8 +58,7 @@ MinHeap.prototype.heapify = function(index) {
     smallest = rightIndex;
   }
   if (smallest !== index) {
-    [this._heap[smallest], this._heap[index]]
-      = [this._heap[index], this._heap[smallest]];
+    this.swap(smallest, index);
     this.heapify(smallest);
   }
 }
@@ -54,35 +66,45 @@ MinHeap.prototype.extractMin = function() {
   if (this._heap.length === 0) {
     throw Error('Heap is empty!');
   }
+  if (Array.isArray(this._heap[0])) {
+    this._heapHandlers[this._heap[0][0]] = null;
+  }
+  if (this._heap.length === 1) {
+    return this._heap.pop();
+  }
   const min = this._heap[0];
 
   this._heap[0] = this._heap.pop();
+  if (Array.isArray(this._heap[0])) {
+    this._heapHandlers[this._heap[0][0]] = 0;
+  }
   this.heapify(0);
 
   return min;
 }
 MinHeap.prototype.decreaseKey = function(index, key) {
   if (index < 0 || index >= this._heap.length) {
+    console.log('index', index, key);
     throw Error('Index is outside the bounds of the heap!');
   }
-  if (this.compare(key, this._heap[index]) > 0) {
-    throw Error('Value is greater than key!');
-  }
-  if (this.compare(key, this._heap[index]) === 0) {
-    throw Error('Matching values!');
+  if (this.compare(key, this._heap[index]) >= 0) {
+    return;
   }
   this.setValue(index, key);
 
   while (index > 0
     && this.compare(this._heap[this.parent(index)], this._heap[index]) > 0) {
       let curParent = this.parent(index);
-      [this._heap[curParent], this._heap[index]]
-        = [this._heap[index], this._heap[curParent]];
+
+      this.swap(index, curParent);
       index = curParent;
   }
 }
 MinHeap.prototype.insert = function(key) {
   this._heap.push(this.maxValue(key));
+  if (Array.isArray(key)) {
+    this._heapHandlers[key[0]] = this._heap.length - 1;
+  }
   this.decreaseKey(this._heap.length - 1, key);
 }
 module.exports = { defaultCompare, MinHeap };

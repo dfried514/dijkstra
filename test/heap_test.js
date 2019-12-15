@@ -17,6 +17,26 @@ describe('HEAP METHODS', () => {
   before(() => {
     heap = new MinHeap();
   });
+  describe('swap', () => {
+    beforeEach(() => {
+      heap._heap = [1, 2, 3, 4, 5];
+    });
+    it('should correctly swap two apart values within the heap', () => {
+      heap.swap(1, 4);
+
+      expect(heap._heap).to.eql([1, 5, 3, 4, 2]);
+    });
+    it('should correctly swap two adjacent values within the heap', () => {
+      heap.swap(2, 3);
+
+      expect(heap._heap).to.eql([1, 2, 4, 3, 5]);
+    });
+    it('should correctly swap the same value within the heap', () => {
+      heap.swap(2, 2);
+
+      expect(heap._heap).to.eql([1, 2, 3, 4, 5]);
+    });
+  });
   describe('heapify', () => {
     it('should correctly maintain heap structure of already formed heap', () => {
       heap._heap = [1, 2, 3, 4];
@@ -48,6 +68,12 @@ describe('HEAP METHODS', () => {
       expect(heap.extractMin()).to.equal(1);
       expect(heap._heap).to.deep.equal([2, 4, 3]);
     });
+    it('should return min key and empty heap when one key is in the heap', () => {
+      heap._heap = [1];
+
+      expect(heap.extractMin()).to.equal(1);
+      expect(heap._heap).to.be.empty;
+    });
   });
   describe('decreaseKey', () => {
     it('should throw an error if the index is outside the bounds of the heap', () => {
@@ -59,23 +85,21 @@ describe('HEAP METHODS', () => {
       expect(handler).to.throw(Error);
       expect(handler).to.throw('Index is outside the bounds of the heap!');
     });
-    it('should throw an error if the decrease value is greater than the key', () => {
+    it('should not throw an error when decrease value is greater than key', () => {
       heap._heap = [10, 20, 30, 40];
 
       const handler = () => {
         heap.decreaseKey(3, 50);
       };
-      expect(handler).to.throw(Error);
-      expect(handler).to.throw('Value is greater than key!');
+      expect(handler).to.not.throw();
     });
-    it('should throw an error if the value matches the key', () => {
+    it('should not throw an error if the value matches the key', () => {
       heap._heap = [1, 2, 3, 4];
 
       const handler = () => {
         heap.decreaseKey(2, 3);
       };
-      expect(handler).to.throw(Error);
-      expect(handler).to.throw('Matching values!');
+      expect(handler).to.not.throw();
     });
     it('should decrease the key of a particular index and update the heap', () => {
       heap._heap = [10, 20, 30, 40];
@@ -99,9 +123,5 @@ describe('HEAP METHODS', () => {
 
       expect(heap._heap).to.deep.equal([10, 10, 30, 40, 20]);
     });
-  });
-  after(() => {
-    heap = null;
-    console.log('heap test suite complete, heap = ', heap);
   });
 });
