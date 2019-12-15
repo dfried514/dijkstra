@@ -26,13 +26,6 @@ function graphSetValue (index, key) {
     this._heap[index][1] = key;
   }
 };
-const graph = [
-  undefined,
-  [[3, 1], [4, 4]],
-  [],
-  [[2, 6], [4, 2]],
-  [[2, 3]]
-];
 const heap = new MinHeap(graphCompare, graphMaxValue, graphSetValue);
 
 const initializeHeap = graph => {
@@ -73,7 +66,9 @@ const app = () => {
       graph[curVertex].push(curEdgeArray.map(x => parseInt(x)));
     }
     if(last){
-      console.log(dijkstra(graph));
+      const output = dijkstra(graph);
+      console.log(output.filter((elem, idx) =>
+        [7,37,59,82,99,115,133,165,188,197].includes(idx)).join(','));
     }
   });
 };
